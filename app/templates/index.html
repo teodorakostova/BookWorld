@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class='add_book_form'>
+	<form action="{{ url_for('index') }}" method="POST">
+		{{add_book_form.title.label}}
+		{{add_book_form.title}}
+
+		{{add_book_form.author.label}}
+		{{add_book_form.author}}
+
+		{{add_book_form.submit}}
+	</form>
+</div>
+{% endblock %}

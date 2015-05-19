@@ -1,0 +1,38 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<html>
+    <head>
+        <title>Login</title>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='loginstyle.css') }}">
+    </head>
+    <body>
+        <div class_='container'>
+        <div id='login-form'>
+        <h3>Login</h3>
+        <fieldset>
+            <form action="{{ url_for('login') }}" method="POST">
+                {{ form.hidden_tag() }}
+                {{ form.email.label }}
+                {{ form.email }}
+     
+                {{ form.password.label }}
+                {{ form.password }}
+    
+                {{ form.csrf_token }}
+                {{ form.submit }}
+                <p>{{ form.remember_me }} Remember Me</p>                                
+                <footer class="clearfix">
+                    <p>
+                        <span class="info">?</span>
+                        <a href="#">Forgot Password</a>
+                    </p>
+                </footer>
+            </form>
+        </fieldset>
+        </div>
+        </div>
+    </body>
+</html>
+{% endblock %}
