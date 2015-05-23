@@ -1,18 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="unread_books">
-	<ul>
-		{% for unread_book in unread_books %}
-		<li>{{unread_book.title}} by {{unread_book.author}}</li>
-		{% endfor %}
-	</ul>
-</div>
 
-<div class="read_books">
-	<ul>
-		{% for read_book in read_books %}
-		<li>{{read_book.title}} by {{read_book.author}}</li>
-		{% endfor %}
-	</ul>
-</div>
+  <div class="col-md-4">
+    <div class="list-group">
+      {% for unread_book in unread_books %}
+      <a href="#" class="list-group-item active">
+        <h4 class="list-group-item-heading"> {{unread_book.title}} by {{ unread_book.author }}</h4>
+        <p class="list-group-item-text">...</p>
+      </a>
+      {% endfor %}
+    </div>
+    
+  </div>
+
+  <div class="col-md-8">
+	<div class="list-group">
+	  {% for read_book in read_books %}
+  	  <a href="#" class="list-group-item active">
+    	<h4 class="list-group-item-heading"> {{read_book.title}} by {{ read_book.author }}}</h4>
+    	<p class="list-group-item-text">...</p>
+  	  </a>
+	  {% endfor %}
+    </div>
+  </div>
+
 {% endblock %}

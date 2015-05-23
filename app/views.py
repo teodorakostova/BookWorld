@@ -11,12 +11,14 @@ def index():
         return redirect(url_for('login'))
     add_book_form = AddBookForm()
     if request.method == 'POST':
-    	book = Book(title=add_book_form.title.data, author=add_book_form.author.data)
-    	current_user = User.query.filter(User.email == session['email']).first()
-    	c = UserBooks(book_state='unread')
-    	c.book = book
-    	current_user.books.append(c)
-    	db.session.commit()
+        book = Book() 
+        book.author = add_book_form.author.data
+        book.title = add_book_form.title.data
+        current_user = User.query.filter(User.email == session['email']).first()
+        c = UserBooks(book_state='unread')
+        c.book = book
+        current_user.books.append(c)
+        db.session.commit()
     return render_template('index.html', add_book_form=add_book_form)
 
 
@@ -27,7 +29,7 @@ def login():
         session['remember_me'] = form.remember_me.data
         session['email'] = form.email.data
         return redirect(url_for('index'))  # for profile..
-    return render_template('login.html', title='Sign In', form=form,)
+    return render_template('login.html', title='Sign In', form=form)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -59,18 +61,23 @@ def show_users_books():
         return redirect(url_for('login'))
     current_user = User.query.filter(User.email == session['email']).first()
     query = """
-		SELECT * FROM BOOK
-		WHERE id IN (
-			SELECT book_id FROM USER_BOOKS ub 
-			WHERE 
-			ub.user_id == {} AND
-			ub.book_state == {})
-	"""
+        SELECT * FROM BOOK
+        WHERE id IN (
+            SELECT book_id FROM USER_BOOKS ub 
+            WHERE 
+            ub.user_id == {} AND
+            ub.book_state == {})
+    """
 
     unread_books_query = query.format(int(current_user.id), "\"unread\"")
     read_books_query = query.format(int(current_user.id), "\"read\"")
 
     unread_books = db.session.execute(unread_books_query)
     read_books = db.session.execute(read_books_query)
-    print(unread_books)
+    for b in unread_books:
+        print("unread", b)
+    for br in read_books:
+        print("read", br)
+    unread_books = db.session.execute(unread_books_query)
+    read_books = db.session.execute(read_books_query)
     return render_template('bookshelf.html', unread_books=unread_books, read_books=read_books)

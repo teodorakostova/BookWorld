@@ -2,37 +2,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<html>
-    <head>
-        <title>Login</title>
-        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='loginstyle.css') }}">
-    </head>
-    <body>
-        <div class_='container'>
-        <div id='login-form'>
-        <h3>Login</h3>
-        <fieldset>
-            <form action="{{ url_for('login') }}" method="POST">
-                {{ form.hidden_tag() }}
-                {{ form.email.label }}
-                {{ form.email }}
-     
-                {{ form.password.label }}
-                {{ form.password }}
-    
-                {{ form.csrf_token }}
-                {{ form.submit }}
-                <p>{{ form.remember_me }} Remember Me</p>                                
-                <footer class="clearfix">
-                    <p>
-                        <span class="info">?</span>
-                        <a href="#">Forgot Password</a>
-                    </p>
-                </footer>
-            </form>
-        </fieldset>
-        </div>
-        </div>
-    </body>
-</html>
+<div class="col-md-3">
+    <h3 class="h3">Login</h3><hr/>
+        <form action="{{ url_for('login') }}" method="POST" class="form">
+       
+          <div class="form-group">
+            {{form.email.label}}
+            {{form.email(class="form-control", type="email", id='Email')}}
+            
+          </div>
+
+          <div class="form-group">
+            {{form.password.label}}
+            {{form.password(class="form-control", type="password", id="Password")}}            
+          </div>
+
+          {{form.submit(class="btn btn-primary", id="Submit")}}
+           
+          <span class="pull-right">
+            {{form.remember_me.label}}
+            {{form.remember_me(type="checkbox")}}
+          </span>
+
+          {{ form.csrf_token }}
+        </form>
+</div>
 {% endblock %}

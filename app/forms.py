@@ -18,14 +18,16 @@ class EmailPasswordForm(Form):
 
 
 class LoginForm(EmailPasswordForm):
-	remember_me = BooleanField('remember_me', default=False)
+	remember_me = BooleanField('Remember me', default=False)
 
 	def validate(self):
 		if not Form.validate(self):
 			return False
 
 		user = User.query.filter_by(email = self.email.data.lower()).first()
+
 		if user and user.verify_password(self.password.data):
+			print("USERID:", user.id)
 			session['current_user_id'] = user.id
 			return True
 		else:

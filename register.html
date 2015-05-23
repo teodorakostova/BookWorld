@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+ 
+{% block content %}
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='registerstyle.css') }}">
+  <h2>Sign up</h2>
+  <div align="center">
+  <form action="{{ url_for('register') }}" method="POST">
+    {{ form.hidden_tag() }}
+     
+    {{ form.firstname.label }}
+    {{ form.firstname }}
+     
+    {{ form.lastname.label }}
+    {{ form.lastname }}
+     
+    {{ form.email.label }}
+    {{ form.email }}
+     
+    {{ form.password.label }}
+    {{ form.password }}
+    <br>
+    <br>
+    {{ form.submit }}
+  </form>
+  </div>
+     
+{% endblock %}
