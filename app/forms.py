@@ -5,10 +5,12 @@ from .models import User
 from flask import session
 
 
+
 class AddBookForm(Form):
 	title = TextField("Title", validators=[Required()])
 	author = TextField("Author", validators=[Required()])
 	submit = SubmitField('Submit')
+	
 
 
 class EmailPasswordForm(Form):

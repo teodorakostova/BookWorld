@@ -1,27 +1,16 @@
 {% extends "base.html" %}
+{% import "forms.html" as forms %}
+
 {% block content %}
 
   <div class="col-md-4">
-    <div class="list-group">
-      {% for unread_book in unread_books %}
-      <a href="#" class="list-group-item active">
-        <h4 class="list-group-item-heading"> {{unread_book.title}} by {{ unread_book.author }}</h4>
-        <p class="list-group-item-text">...</p>
-      </a>
-      {% endfor %}
-    </div>
-    
+  	<h3 class="h3">Wishlist</h3>
+    {{forms.display_books(unread_books)}}
   </div>
 
   <div class="col-md-8">
-	<div class="list-group">
-	  {% for read_book in read_books %}
-  	  <a href="#" class="list-group-item active">
-    	<h4 class="list-group-item-heading"> {{read_book.title}} by {{ read_book.author }}}</h4>
-    	<p class="list-group-item-text">...</p>
-  	  </a>
-	  {% endfor %}
-    </div>
+  	<h3 class="h3">Already Read</h3>
+	{{forms.display_books(read_books)}}
   </div>
 
 {% endblock %}
