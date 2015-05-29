@@ -8,13 +8,29 @@
       	{{forms.login_form(loginform)}}
       {% else %}
         <h3 class="h3 text-center">Currently reading</h3>
-        <form action="/add_unread" method="POST">
+        <form action="/bookshelf" method="POST">
         	{{ forms.addBook(unread_book_form) }}
+          <div class="form-group">
+            {{ unread_book_form.submit(class="btn btn-primary")}}
+          </div>
+          {{ unread_book_form.csrf_token }}
         </form>
         
         <h3 class="h3 text-center">Already read</h3>
-        <form action="/add_read" method="POST">
-          {{ forms.addBook(read_book_form) }} 
+        <form action="/bookshelf" method="POST">
+          {{ forms.addBook(read_book_form) }}
+          <!-- Rating dropdown -->
+          {{ read_book_form.rating.label}}
+          {{ read_book_form.rating }}
+          
+          <div class="form-group">
+            <h4 class="h4 text center">Add your review</h4>
+            <textarea class="form-control" rows="5"></textarea>
+          </div>
+          <div class="form-group">
+            {{ read_book_form.submit(class="btn btn-primary")}}
+          </div>
+          {{ read_book_form.csrf_token }}
         </form>
       {% endif %}
     </div>

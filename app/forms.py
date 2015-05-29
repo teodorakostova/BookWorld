@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, PasswordField, BooleanField, SubmitField
+from wtforms import TextAreaField, TextField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import Required, Email
 from .models import User
 from flask import session
@@ -10,7 +10,8 @@ class AddBookForm(Form):
 	title = TextField("Title", validators=[Required()])
 	author = TextField("Author", validators=[Required()])
 	submit = SubmitField('Submit')
-	
+	rating = SelectField("Rating", choices=[(str(i),i) for i in range(1,11)])
+	review = TextAreaField("Review")
 
 
 class EmailPasswordForm(Form):
