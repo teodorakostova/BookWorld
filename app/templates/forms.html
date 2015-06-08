@@ -23,6 +23,7 @@
           {{ form.csrf_token }}
         </form>
 {% endmacro %}
+
 {% macro addBook(current_form) %}
         <div class="form-group">
           {{current_form.title.label}}
@@ -31,17 +32,16 @@
         <div class="form-group">
           {{current_form.author.label}}
           {{current_form.author(class="form-control")}}
-        </div>
-          
-        
+        </div>                 
 {% endmacro %}
+
 {% macro display_books(books) %}
-    <div class="list-group">
-      {% for b in books %}
-      <a href="#" class="list-group-item active">
-        <h4 class="list-group-item-heading"> {{b.title}} by {{ b.author }}</h4>
-        <p class="list-group-item-text">...</p>
-      </a>
-      {% endfor %}
-    </div>
+  <div class="list-group text-center">
+    {% for b in books %}
+    <a href="#" class="list-group-item">
+      <h4 class="list-group-item-heading"> {{b.book.title}} by {{ b.book.author }}</h4>          
+        <p class="list-group-item-text">You rate it: {{b.book_rating }}</p>
+    </a>      
+    {% endfor %}
+  </div>
 {% endmacro %}

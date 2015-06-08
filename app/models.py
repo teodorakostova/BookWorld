@@ -41,26 +41,31 @@ class User(db.Model):
         return custom_app_context.verify(password, self.password)
 
     def get_books_with_state(self, state):
-        return [(b.book.title, b.book.author) for b in self.books if b.book_state == state]
+        return [b for b in self.books if b.book_state == state]
 
     def is_book_in_state(self, book, state):
-        return ((book.title, book.author) in self.get_books_with_state(state))
+        return ((book.title, book.author) in [(b.book.title, b.book.author) for b in self.get_books_with_state(state)])
 
-    def change_book_state(self,book_id, new_state):
+    def change_book_state(self,book_id, new_state, rating, review):
         book = UserBooks.query.filter(UserBooks.user_id == self.id, UserBooks.book_id == book_id).first()
         book.book_state = new_state
+        if rating > 0:
+            book.book_rating = rating
+        if review != "":
+            book.book_review = review
         db.session.commit()
 
     def add_book(self, book, state, rating=0, review=""):
         if state == 'read' and self.is_book_in_state(book,'unread'):
             book_id = Book.query.filter(Book.title == book.title, Book.author == book.author).first().id
-            self.change_book_state(book_id, 'read')
+            self.change_book_state(book_id,'read', rating, review)
             return
         elif state == 'unread' and self.is_book_in_state(book,'read'):
             raise BookWasAlreadyReadException()
         else:
             c = UserBooks(book_id=book.id, 
                 user_id=self.id,book_state=state, book_rating=rating, book_review=review)
+
             c.book = book
             self.books.append(c)
             db.session.commit()
@@ -71,6 +76,7 @@ class Book(db.Model):
     title = db.Column(db.String(64), unique=True)
     author = db.Column(db.String(64))
     __table_args__ = (UniqueConstraint('title', 'author'),)
+
 
     def __repr__(self):
         return "ID: {} Title: {}, Author: {}\n".format(self.id,self.title, self.author)

@@ -34,7 +34,6 @@ class TestCase(unittest.TestCase):
 	def test_add_read_twice(self):
 		u = User(email="aa@example.com")
 		db.session.add(u)
-
 		b = Book(title="To Kill A Mocking Bird", author="Harper Lee")
 		c = Book(title="To Kill A Mocking Bird", author="Harper Lee")
 		u.add_book(b, 'read')
@@ -44,7 +43,6 @@ class TestCase(unittest.TestCase):
 	def test_add_unread_twice(self):
 		u = User(email="aa@example.com")
 		db.session.add(u)
-
 		b = Book(title="To Kill A Mocking Bird", author="Harper Lee")
 		c = Book(title="To Kill A Mocking Bird", author="Harper Lee")
 		u.add_book(b, 'unread')
