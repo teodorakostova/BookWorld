@@ -36,12 +36,23 @@
 {% endmacro %}
 
 {% macro display_books(books) %}
-  <div class="list-group text-center">
-    {% for b in books %}
-    <a href="#" class="list-group-item">
-      <h4 class="list-group-item-heading"> {{b.book.title}} by {{ b.book.author }}</h4>          
-        <p class="list-group-item-text">You rate it: {{b.book_rating }}</p>
-    </a>      
+  <div class="panel-body">
+    
+    <table class="table">
+      <tr>
+        <th>Title</th>
+        <th>Author</th> 
+        <th>Rating</th>
+        <th>Review</th>
+      </tr>  
+      {% for b in books %}
+            <tr>
+              <td>{{b.book.title}}</td>
+              <td>{{ b.book.author }}</td> 
+              <td>{{b.book_rating }}</td>
+              <td>{{b.book_review }}</td>
+            </tr>  
     {% endfor %}
+     </table>
   </div>
 {% endmacro %}

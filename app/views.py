@@ -10,24 +10,25 @@ def index():
     loginform = LoginForm()
     read_book_form = AddBookForm()
     unread_book_form = AddBookForm()
+    highly_rated_books = UserBooks.query.filter(UserBooks.book_state != "read").distinct(
+        UserBooks.book_id).order_by(UserBooks.book_rating.desc()).limit(10).all()
 
     return render_template('index.html', loginform=loginform,
-                           read_book_form=read_book_form, unread_book_form=unread_book_form)
+                           read_book_form=read_book_form, unread_book_form=unread_book_form,
+                           highly_rated=highly_rated_books)
 
 
 @app.route('/add_read', methods=['GET', 'POST'])
 def add_read():
-    if request.method == 'POST':
-        read_book_form = AddBookForm()
-        add_book_with_state('read', read_book_form)
+    read_book_form = AddBookForm()
+    add_book_with_state('read', read_book_form)
     return redirect('/bookshelf')
 
 
 @app.route('/add_unread', methods=['GET', 'POST'])
 def add_unread():
-    if request.method == 'POST':
-        unread_book_form = AddBookForm()
-        add_book_with_state('unread', unread_book_form)
+    unread_book_form = AddBookForm()
+    add_book_with_state('unread', unread_book_form)
     return redirect('/bookshelf')
 
 

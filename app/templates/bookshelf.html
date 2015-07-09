@@ -4,13 +4,21 @@
 {% block content %}
 
   <div class="col-md-4">
-  	<h3 class="h3">Currently reading</h3>
-    {{forms.display_books(unread_books)}}
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2 class="panel-title", align="center">Currently reading</h2>
+      </div> 
+      {{forms.display_books(unread_books)}}
+    </div>
   </div>
 
   <div class="col-md-8">
-  	<h3 class="h3">Already Read</h3>
-	{{forms.display_books(read_books)}}
+  	<div class="panel panel-primary">
+      <div class="panel-heading">
+        <h2 class="panel-title", align="center">Already Read</h2>
+      </div> 
+      {{forms.display_books(read_books)}}
+    </div>
   </div>
 
 {% endblock %}

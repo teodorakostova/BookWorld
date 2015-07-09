@@ -3,6 +3,8 @@ from passlib.apps import custom_app_context
 import os
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import UniqueConstraint
+from collections import Counter
+
 
 class BookWasAlreadyReadException(Exception):
     pass
@@ -21,7 +23,6 @@ class UserBooks(db.Model):
                                                             self.user_id, self.book_state)
 
 
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
@@ -32,7 +33,7 @@ class User(db.Model):
     __table_args__ = (UniqueConstraint('email'),)
 
     def __repr__(self):
-        return 'User: %r' % (self.email)
+        return 'User: %r' % (self.email) + ' ID: %r' % (self.id)
 
     def hash_password(self, password):
         self.password = custom_app_context.encrypt(password)
@@ -64,11 +65,15 @@ class User(db.Model):
             raise BookWasAlreadyReadException()
         else:
             c = UserBooks(book_id=book.id, 
-                user_id=self.id,book_state=state, book_rating=rating, book_review=review)
+                user_id=self.id, book_state=state, book_rating=rating, book_review=review)
 
             c.book = book
             self.books.append(c)
             db.session.commit()
+
+    def get_favourite_author(self):
+        readBooks = self.get_books_with_state('read')
+        return max(Counter([b.book.author for b in readBooks]))
 
 
 class Book(db.Model):
@@ -79,6 +84,7 @@ class Book(db.Model):
 
 
     def __repr__(self):
-        return "ID: {} Title: {}, Author: {}\n".format(self.id,self.title, self.author)
+        return "ID: {} Title: {}, Author: {}\n".format(self.id, self.title, self.author)
 
-    
+    def get_book_by_id(self, id):
+        return Book.query.filter(Book.id == id).first()
