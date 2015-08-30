@@ -96,15 +96,13 @@ def find_book_or_author(search_string):
 @app.route('/explore', methods=['GET', 'POST'])
 def search():
 	search_form = SearchForm()
+	found_books = []
 	if request.method == 'GET':
-		print("OPOPOPOPO")
-		return render_template('explore.html', search_form=search_form,
-								results=list())
-	user_input = search_form.input_text
-	print("ADAaDDADAdaDADADAF")
-	found_books = map(Book.get_books_by_author(user_input), lambda b: b.title)
-	print("FOUND", found_books)
+		print('GET')
+	if 'input_text' in request.args:
+		user_input = request.args['input_text']
+		print(user_input)
+		found_books = [book for book in Book.get_books_by_author(author=user_input)]
+		print("FOUND", found_books)	
 	return render_template('explore.html', search_form=search_form, 
 							results=found_books)
-
-
