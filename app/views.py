@@ -87,3 +87,24 @@ def show_users_books():
     return render_template('bookshelf.html',
                            unread_books=user.get_books_with_state('unread'),
                            read_books=user.get_books_with_state('read'))
+
+
+def find_book_or_author(search_string):
+	pass
+
+
+@app.route('/explore', methods=['GET', 'POST'])
+def search():
+	search_form = SearchForm()
+	if request.method == 'GET':
+		print("OPOPOPOPO")
+		return render_template('explore.html', search_form=search_form,
+								results=list())
+	user_input = search_form.input_text
+	print("ADAaDDADAdaDADADAF")
+	found_books = map(Book.get_books_by_author(user_input), lambda b: b.title)
+	print("FOUND", found_books)
+	return render_template('explore.html', search_form=search_form, 
+							results=found_books)
+
+

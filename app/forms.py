@@ -52,3 +52,7 @@ class RegisterForm(EmailPasswordForm):
 			return False
 		else:
 			return True
+
+class SearchForm(Form):
+	input_text = TextField(validators='Required')
+	search_btn = SubmitField('Search')

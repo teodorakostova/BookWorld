@@ -88,3 +88,6 @@ class Book(db.Model):
 
     def get_book_by_id(self, id):
         return Book.query.filter(Book.id == id).first()
+
+    def get_books_by_author(self, author):
+    	return Book.query.filter(Book.author == author).all()
