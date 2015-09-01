@@ -8,24 +8,21 @@ from .models import User, UserBooks, Book
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     loginform = LoginForm()
-    read_book_form = AddBookForm()
-    unread_book_form = AddBookForm()
-    highly_rated_books = UserBooks.query.filter(UserBooks.book_state != "read").distinct(
+    highly_rated_books = UserBooks.query.distinct(
         UserBooks.book_id).order_by(UserBooks.book_rating.desc()).limit(10).all()
-
     return render_template('index.html', loginform=loginform,
-                           read_book_form=read_book_form, unread_book_form=unread_book_form,
+                           read_book_form=AddBookForm(), unread_book_form=AddBookForm(),
                            highly_rated=highly_rated_books)
 
 
-@app.route('/add_read', methods=['GET', 'POST'])
+@app.route('/add_read', methods=['POST'])
 def add_read():
     read_book_form = AddBookForm()
     add_book_with_state('read', read_book_form)
     return redirect('/bookshelf')
 
 
-@app.route('/add_unread', methods=['GET', 'POST'])
+@app.route('/add_unread', methods=['POST'])
 def add_unread():
     unread_book_form = AddBookForm()
     add_book_with_state('unread', unread_book_form)
@@ -89,20 +86,12 @@ def show_users_books():
                            read_books=user.get_books_with_state('read'))
 
 
-def find_book_or_author(search_string):
-	pass
-
-
 @app.route('/explore', methods=['GET', 'POST'])
 def search():
-	search_form = SearchForm()
 	found_books = []
-	if request.method == 'GET':
-		print('GET')
 	if 'input_text' in request.args:
-		user_input = request.args['input_text']
-		print(user_input)
-		found_books = [book for book in Book.get_books_by_author(author=user_input)]
-		print("FOUND", found_books)	
-	return render_template('explore.html', search_form=search_form, 
+		user_input = request.args['input_text']	
+		found_books = Book.get_books_by_criterion(criterion=user_input)
+	return render_template('explore.html', search_form=SearchForm(), 
 							results=found_books)
+

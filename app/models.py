@@ -84,10 +84,10 @@ class Book(db.Model):
 
 
     def __repr__(self):
-        return "ID: {} Title: {}, Author: {}\n".format(self.id, self.title, self.author)
+        return "Title: {}, Author: {}\n".format(self.title, self.author)
 
     def get_book_by_id(self, id):
         return Book.query.filter(Book.id == id).first()
 
-    def get_books_by_author(author):
-    	return Book.query.filter(Book.author == author).all()
+    def get_books_by_criterion(criterion):
+    	return Book.query.filter(Book.title.like('%' + criterion + '%')).all() + Book.query.filter(Book.author.like('%' + criterion + '%')).all()

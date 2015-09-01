@@ -37,7 +37,6 @@
 
 {% macro display_books(books) %}
   <div class="panel-body">
-    
     <table class="table">
       <tr>
         <th>Title</th>
@@ -47,10 +46,10 @@
       </tr>  
       {% for b in books %}
             <tr>
-              <td>{{b.book.title}}</td>
+              <td>{{ b.book.title }}</td>
               <td>{{ b.book.author }}</td> 
-              <td>{{b.book_rating }}</td>
-              <td>{{b.book_review }}</td>
+              <td>{{ b.book_rating }}</td>
+              <td>{{ b.book_review }}</td>
             </tr>  
     {% endfor %}
      </table>
