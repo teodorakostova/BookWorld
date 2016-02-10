@@ -1,13 +1,13 @@
-{% extends "base.html" %}
-{% import "forms.html" as forms %}
-{% block content %}
+{%extends "base.html"%}
+{%import "forms.html" as forms%}
+{%block content%}
 <div class='container'>
   <div class="row">
     <div class="col-md-4">
       {% if 'email' not in session %}
       	{{forms.login_form(loginform)}}
       {% else %}
-        <h3 class="h3 text-center">Currently reading</h3>
+        <h4 class="h4 text-center">Currently reading</h4>
         <form action="/add_unread" method="POST">
         	{{ forms.addBook(unread_book_form) }}
           <div class="form-group">
@@ -16,7 +16,7 @@
           {{ unread_book_form.csrf_token }}
         </form>
         
-        <h3 class="h3 text-center">Already read</h3>
+        <h4 class="h4 text-center">Already read</h4>
         <form action="/add_read" method="POST">
           {{ forms.addBook(read_book_form) }}
           
@@ -31,13 +31,12 @@
           <div class="form-group">
             {{ read_book_form.submit(class="btn btn-primary")}}
           </div>
-          {{ read_book_form.csrf_token }}
         </form>
-      {% endif %}
+      {%endif%}
     </div>
     <div class="col-md-8">
-      <h3 class="h3 text-center">Recent Books</h3> 
-      <div class="list-group text-center" id="articles">
+      <h4 class="h4 text-center">Recent Books</h4> 
+      <div class="list-group text-center" id="recent-books">
         <a href="#" class="list-group-item">Cras justo odio</a>
         <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
         <a href="#" class="list-group-item">Morbi leo risus</a>

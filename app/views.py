@@ -10,7 +10,7 @@ def index():
     loginform = LoginForm()
     read_book_form = AddBookForm()
     unread_book_form = AddBookForm()
-
+    UserBooks.get_books_with_state(UserBooks,'unread')
     return render_template('index.html', loginform=loginform,
                            read_book_form=read_book_form, unread_book_form=unread_book_form)
 
@@ -30,19 +30,7 @@ def add_unread():
         add_book_with_state('unread', unread_book_form)
     return redirect('/bookshelf')
 
-
-def get_current_user():
-    return User.query.filter(User.email == session['email']).first()
-
-
-def add_book_with_state(state, current_form):
-    book = Book(author=current_form.author.data,
-                title=current_form.title.data)
-    current_user = get_current_user()
-    current_user.add_book(
-        book, state, current_form.rating.data, current_form.review.data)
-
-
+  
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -84,5 +72,39 @@ def show_users_books():
     if user is None:
         return redirect(url_for('login'))
     return render_template('bookshelf.html',
-                           unread_books=user.get_books_with_state('unread'),
-                           read_books=user.get_books_with_state('read'))
+                           unread_books = get_books_with_state(user.id, 'unread'),
+                           read_books = get_books_with_state(user.id, 'read'))
+
+def get_current_user():
+    return User.query.filter(User.email == session['email']).first()
+
+
+def add_book_with_state(state, current_form):
+    book = Book(author = current_form.author.data,
+                title = current_form.title.data)
+    db.session.add(book)
+    user = get_current_user()
+    rating = current_form.rating.data
+    review = current_form.review.data
+    ub = UserBooks(user_id = user.id, book_id = book.id, 
+                   book_state = state,
+                   book_rating = rating,
+                   book_review = review)
+    
+    db.session.add(ub)
+    db.session.commit()
+
+def get_books_with_state(uid, state):
+    user_books = UserBooks.query.filter(UserBooks.user_id == uid, 
+                                        UserBooks.book_state == state).all()
+    return [book for book in [Book.query.filter(Book.id == user_book.book_id).first() 
+                    for user_book in user_books]]
+    
+def get_book_rating(bid):
+    ratings = [b for b.book_rating in UserBooks.query.filter(UserBooks.book_id == bid).all()]
+    return sum(ratings)
+                           
+def get_top_books(offset):
+    pass
+						   
+						   
