@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import TextAreaField, StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms import TextAreaField, TextField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import Required, Email
 from .models import User
 from flask import session
@@ -7,15 +7,15 @@ from flask import session
 
 
 class AddBookForm(Form):
-	title = StringField("Title", validators=[Required()])
-	author = StringField("Author", validators=[Required()])
+	title = TextField("Title", validators=[Required()])
+	author = TextField("Author", validators=[Required()])
 	submit = SubmitField('Submit')
 	rating = SelectField("Rating", choices=[(str(i),i) for i in range(1,11)])
 	review = TextAreaField("Review")
 
 
 class EmailPasswordForm(Form):
-	email = StringField('Email', validators=[Required(), Email()])
+	email = TextField('Email', validators=[Required(), Email()])
 	password = PasswordField('Password', validators=[Required()])
 	submit = SubmitField('Submit')
 
@@ -39,8 +39,8 @@ class LoginForm(EmailPasswordForm):
 
 
 class RegisterForm(EmailPasswordForm):
-	firstname = StringField('First Name')
-	lastname = StringField('Last Name')
+	firstname = TextField('First Name')
+	lastname = TextField('Last Name')
 
 	def validate(self):
 		if not Form.validate(self):
@@ -52,7 +52,3 @@ class RegisterForm(EmailPasswordForm):
 			return False
 		else:
 			return True
-
-class SearchForm(Form):
-	input_text = StringField(validators='Required')
-	search_btn = SubmitField('Search')
