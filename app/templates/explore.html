@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "forms.html" as forms %}
+
+{% block content %}
+<form action="/explore" method="GET">
+<div class="col-md-8">
+    <div class="input-group"> 
+      {{search_form.input_text(class="form-control", type="text", class="form-control", placeholder="Author-Book title")}}
+      <span class="input-group-btn">
+      	{{search_form.search_btn(class="btn btn-default", id="Search")}}
+      </span>
+    </div><!-- /input-group -->
+	<div class="col-lmd-6">
+		<ul class="list-group">
+		{% for res in results %}
+			<li class="list-group-item">{{res}}</li>
+		{% endfor %}		
+		</ul>
+	</div>
+</div> <!-- /.row -->
+</form>
+{% endblock %}

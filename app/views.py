@@ -8,26 +8,30 @@ from .models import User, UserBooks, Book
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     loginform = LoginForm()
+<<<<<<< HEAD
     read_book_form = AddBookForm()
     unread_book_form = AddBookForm()
     UserBooks.get_books_with_state(UserBooks,'unread')
+=======
+    highly_rated_books = UserBooks.query.distinct(
+        UserBooks.book_id).order_by(UserBooks.book_rating.desc()).limit(10).all()
+>>>>>>> c8981f45495ca3af75254b4e606b6c2a47c046ea
     return render_template('index.html', loginform=loginform,
-                           read_book_form=read_book_form, unread_book_form=unread_book_form)
+                           read_book_form=AddBookForm(), unread_book_form=AddBookForm(),
+                           highly_rated=highly_rated_books)
 
 
-@app.route('/add_read', methods=['GET', 'POST'])
+@app.route('/add_read', methods=['POST'])
 def add_read():
-    if request.method == 'POST':
-        read_book_form = AddBookForm()
-        add_book_with_state('read', read_book_form)
+    read_book_form = AddBookForm()
+    add_book_with_state('read', read_book_form)
     return redirect('/bookshelf')
 
 
-@app.route('/add_unread', methods=['GET', 'POST'])
+@app.route('/add_unread', methods=['POST'])
 def add_unread():
-    if request.method == 'POST':
-        unread_book_form = AddBookForm()
-        add_book_with_state('unread', unread_book_form)
+    unread_book_form = AddBookForm()
+    add_book_with_state('unread', unread_book_form)
     return redirect('/bookshelf')
 
   
@@ -72,6 +76,7 @@ def show_users_books():
     if user is None:
         return redirect(url_for('login'))
     return render_template('bookshelf.html',
+<<<<<<< HEAD
                            unread_books = get_books_with_state(user.id, 'unread'),
                            read_books = get_books_with_state(user.id, 'read'))
 
@@ -109,3 +114,18 @@ def get_top_books(offset):
     
 						   
 						   
+=======
+                           unread_books=user.get_books_with_state('unread'),
+                           read_books=user.get_books_with_state('read'))
+
+
+@app.route('/explore', methods=['GET', 'POST'])
+def search():
+	found_books = []
+	if 'input_text' in request.args:
+		user_input = request.args['input_text']	
+		found_books = Book.get_books_by_criterion(criterion=user_input)
+	return render_template('explore.html', search_form=SearchForm(), 
+							results=found_books)
+
+>>>>>>> c8981f45495ca3af75254b4e606b6c2a47c046ea

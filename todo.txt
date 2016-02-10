@@ -1,0 +1,20 @@
+1. Implement search 
+	- by substring(find author/title/both)
+	- by tuple -> (title, author), (title_substring, author_substring)
+	- display results -> sort by most relevent 
+		-> redirect to the single book context
+2. Single book context:
+	- details (title, author, genre, overall rating)
+	- list of text fileds:
+		 + all comments and ratings
+		 + add a new comment 
+		 + add rating
+	- maybe picture/cover someday
+3. Author context: 
+	-list of books -> redirect to the single book context
+4. Genre context - same
+5. Explore page 
+	- display top books by author, genre, rating (soo, buttons to choose criteria) // also on index page
+	- recommended for you + nice alg
+6. User profile page (My bookshelf) - some enhancements(smaller fields, add book fields under the list)
+    - DELETE book
