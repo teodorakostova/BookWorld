@@ -10,6 +10,7 @@ class AddBookForm(Form):
 	submit = SubmitField('Submit')
 	rating = SelectField('Rating', choices=[(str(i),i) for i in range(1,11)])
 	review = TextAreaField('Review')
+	genre = TextField('Genre')
 
 
 class EmailPasswordForm(Form):
