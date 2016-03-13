@@ -1,15 +1,45 @@
 {% extends "base.html" %}
-{% import "forms.html" as forms %}
-
 {% block content %}
 
   <div class="col-md-4">
-  	<h3 class="h3">Currently reading</h3>
-    {{forms.display_books(unread_books)}}
+      <div class="panel panel-primary">
+          <div class="panel-heading">Already read</div>
+            <table class="table">
+              <tr>
+                  <td>Title</td>
+                  <td>Author</td>
+                  <td>Rating</td>
+              </tr>
+
+                {% for book in read_books %}
+                <tr>
+			        <td class="list-group-item">{{book.title}}</td>
+                    <td class="list-group-item">{{book.author}}</td>
+                    <td class="list-group-item">{{book.rating}}</td>
+                </tr>
+		        {% endfor %}
+
+            </table>
+        </div>
   </div>
   <div class="col-md-4">
-  	<h3 class="h3">Already Read</h3>
-	{{forms.display_books(read_books)}}
+  	<div class="panel panel-primary">
+          <div class="panel-heading">Wishlist</div>
+            <table class="table">
+              <tr>
+                  <td>Title</td>
+                  <td>Author</td>
+              </tr>
+                {% for book in unread_books %}
+                <tr>
+			        <td class="list-group-item">{{book.title}}</td>
+                    <td class="list-group-item">{{book.author}}</td>
+                </tr>
+		        {% endfor %}
+
+            </table>
+        </div>
+    </div>
   </div>
   <div class="col-md-4">
 	<h3 class="h3">My profile</h3>

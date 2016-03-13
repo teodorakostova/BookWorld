@@ -14,7 +14,7 @@ class UserBooks(db.Model):
     book_state = db.Column(db.String(10))
     book_rating = db.Column(db.Integer)
     book_review = db.Column(db.String(200))
-    book = relationship("Book", backref='user_assocs')
+    #book = relationship("Book", backref='user_assocs')
 
     def __repr__(self):
         return "Book_id: {}, User_id: {}, State: {}\n".format(self.book_id,
@@ -45,10 +45,14 @@ class Book(db.Model):
     title = db.Column(db.String(64), unique=True)
     author = db.Column(db.String(64))
     genre = db.Column(db.String(64))
+    rating = db.Column(db.Float)
     __table_args__ = (UniqueConstraint('title', 'author'),)
 
+    def __init__(self):
+        rating = 1.0
 
     def __repr__(self):
-        return "ID: {} Title: {}, Author: {}\n".format(self.id,self.title, self.author)
+        return "{}, by: {} Rating: {} ".format(self.title, self.author, self.rating)
+
 
     

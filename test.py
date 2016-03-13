@@ -10,22 +10,30 @@ from app import app, db
 from app.models import User, UserBooks, Book
 from coverage import coverage
 
+
 cov = coverage(source=["app.models", "app.views", "app.forms"])
 cov.start()
 
-class TestCase(unittest.TestCase):
+class TestCase(unittest.TestCase,):
 
     def setUp(self):
         app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
             os.path.join(basedir, 'test.db')
         self.__app__ = app.test_client()            
         db.create_all()
 
-        self.__faker__ = Faker()
-        self.__user__ = User(firstname=self.__faker__.name(), email=self.__faker__.email())
-        db.session.add(self.__user__)
+        titles = ['Title1', 'Title2', 'Title3']
+        authors = ['Author1', 'Author2', 'Author3']
+        user_emails = ['u1@test.com', 'u2@test.com', 'u3@test.com']
+        mixer.init_app(app)
+        users = mixer.cycle(2).blend(User, email=(email for email in user_emails))
+        books = mixer.cycle(2).blend(Book, title=(title for title in titles),
+                                    author=(author for author in authors))
+        user_book = mixer.cycle(2).blend(UserBooks,
+                                         user_id=(user.id for user in users),
+                                         book_id=(book.id for book in books))
+
 
     def tearDown(self):
         db.session.remove()
@@ -36,56 +44,11 @@ class TestCase(unittest.TestCase):
             rv = c.get('/logout')           
             assert 'email' not in flask.session     
 
-    def test_db_taken_email(self):
-        firstname = self.__faker__.name()
-        email = self.__faker__.email()      
-        u = User(firstname=firstname, email=email)      
-        db.session.add(u)
-        db.session.commit()
-        d = User(firstname=firstname, email=email)
-        db.session.add(d)
-        with self.assertRaises(sqlalchemy.exc.IntegrityError):
-            db.session.commit()
+    def test_book(self):
+        print(db.session.query(Book).all())
+        print(db.session.query(User).count())
+        assert db.session.query(Book).count() == 1
 
-    def test_add_read_book_twice(self):     
-        title = self.__faker__.text(max_nb_chars=20)
-        author = self.__faker__.name()
-        b = Book(title=title, author=author)
-        c = Book(title=title, author=author)
-        self.__user__.add_book(b, 'read')
-        with self.assertRaises(sqlalchemy.exc.IntegrityError):
-            self.__user__.add_book(c, 'read')
-    
-    def test_add_unread_twice(self):        
-        title = self.__faker__.text(max_nb_chars=20)
-        author = self.__faker__.name()
-        b = Book(title=title, author=author)
-        c = Book(title=title, author=author)
-        self.__user__.add_book(b, 'unread')
-        with self.assertRaises(sqlalchemy.exc.IntegrityError):
-            self.__user__.add_book(c, 'unread')
-
-    def test_change_unread_to_read(self):       
-        c = Book(title="It", author="St. King")
-        self.__user__.add_book(c, 'unread')
-        b = Book(title="It", author="St. King")
-        self.__user__.add_book(b, 'read')
-        assert len(self.__user__.get_books_with_state('unread')) == 0
-
-    def test_add_unread_when_read(self):        
-        c = Book(title="It", author="St. King")
-        self.__user__.add_book(c, 'read')
-        b = Book(title="It", author="St. King")
-        with self.assertRaises(models.BookWasAlreadyReadException):
-            self.__user__.add_book(b, 'unread')
-
-    def test_search(self):
-        test_books = []
-        for i in range(20):
-            self.__user__.add_book(Book(title=("test" + str(i)), author=self.__faker__.name()), 'read')
-        assert len(Book.get_books_by_criterion(criterion="test")) == 20
-
-    
 
 if __name__ == '__main__':
     try:
