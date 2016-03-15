@@ -1,9 +1,16 @@
 from app import app, db
-from flask import render_template, flash, redirect, request, session, url_for, g
-from sqlalchemy import desc
+from flask import render_template, redirect, request, session, url_for, g
+from flask.ext.login import current_user
+from flask.ext.login import LoginManager
 from .forms import *
 from .models import User, UserBooks, Book
-from random import randint, uniform
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
 
 @app.before_request
 def before_request():
@@ -11,9 +18,16 @@ def before_request():
     if g.user is not None:
         g.search_form = NavSearchForm()
         session['search-data'] = g.search_form.content.data
+    else:
+        loginForm = LoginForm()
+        g.search_form = NavSearchForm()
+        render_template('login.html', title='Sign In', form=loginForm)
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
+    if 'email' not in session:
+        loginForm = LoginForm()
+        return render_template('login.html', title='Sign In', form=loginForm)
     search_str = request.args.get('content', '')
     result = search_by_title(search_str)
     return render_template('book_search_result.html', result_books=result)
@@ -96,6 +110,8 @@ def explore():
     return render_template('explore.html')
 
 def get_current_user():
+    if 'email' not in session.keys():
+        return None
     return User.query.filter(User.email == session['email']).first()
 
 
@@ -140,4 +156,6 @@ def get_books_with_state(uid, state):
 
 def search_by_title(title):
     return Book.query.filter(Book.title.contains(title)).all()
-						   
+
+def reccommend():
+    pass; 
