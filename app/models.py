@@ -3,6 +3,7 @@ from passlib.apps import custom_app_context
 import os
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import UniqueConstraint
+from flask.ext.login import UserMixin
 
 class BookWasAlreadyReadException(Exception):
     pass
@@ -21,7 +22,7 @@ class UserBooks(db.Model):
                                                             self.user_id, self.book_state)
 
                                                             
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password = db.Column(db.String(20))
@@ -38,6 +39,8 @@ class User(db.Model):
 
     def verify_password(self, password):
         return custom_app_context.verify(password, self.password)
+
+
 
 
 class Book(db.Model):

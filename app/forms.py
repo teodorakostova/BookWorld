@@ -26,15 +26,7 @@ class LoginForm(EmailPasswordForm):
 		if not Form.validate(self):
 			return False
 
-		user = User.query.filter_by(email = self.email.data.lower()).first()
 
-		if user and user.verify_password(self.password.data):
-			print("USERID:", user.id)
-			session['current_user_id'] = user.id
-			return True
-		else:
-			self.email.errors.append("Invalid e-mail or password")
-			return False
 
 
 class RegisterForm(EmailPasswordForm):
