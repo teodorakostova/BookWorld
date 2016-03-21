@@ -27,8 +27,6 @@ class LoginForm(EmailPasswordForm):
 			return False
 
 
-
-
 class RegisterForm(EmailPasswordForm):
 	firstname = TextField('First Name')
 	lastname = TextField('Last Name')

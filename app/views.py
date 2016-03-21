@@ -1,12 +1,13 @@
-from builtins import print
-
 from app import app, db
-from flask import render_template, redirect, request, session, url_for, g
+from flask import render_template, redirect, request, session, url_for, flash, g
 from flask.ext.login import current_user
 from flask.ext.login import LoginManager
 from flask.ext.login import login_required, login_user, logout_user
+from builtins import print
+
 from .forms import *
 from .models import User, UserBooks, Book
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -16,19 +17,16 @@ login_manager.init_app(app)
 def load_user(user_id):
     return User.query.get(user_id)
 
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect('/login')
+
+
 @app.before_request
 def before_request():
     g.search_form = NavSearchForm()
     session['search-data'] = g.search_form.content.data
-
-@app.route('/search', methods=['GET', 'POST'])
-def search():
-    if 'email' not in session:
-        loginForm = LoginForm()
-        return render_template('login.html', title='Sign In', form=loginForm)
-    search_str = request.args.get('content', '')
-    result = search_by_title(search_str)
-    return render_template('book_search_result.html', result_books=result)
 
 
 @app.route('/')
@@ -48,6 +46,15 @@ def index():
                            read_book_form=read_book_form,
                            unread_book_form=unread_book_form,
                            top_books=top_books)
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    search_str = request.args.get('content', '')
+    print(search_str)
+
+    result = search_by_title(search_str)
+    return render_template('book_search_result.html', result_books=result)
 
 
 @app.route('/add_read', methods=['GET', 'POST'])
@@ -78,6 +85,7 @@ def login():
             session['current_user_id'] = user.id
             session['remember_me'] = form.remember_me.data
             login_user(user, remember=form.remember_me.data)
+            flash("You logged in successfully")
         else:
             return render_template('login.html', title='Sign In', form=form)
     return redirect(url_for('index'))
@@ -101,17 +109,14 @@ def register():
 @login_required
 def signout():
     logout_user()
+    flash("You logged out")
     return redirect(url_for('index'))
 
 
 @app.route('/bookshelf')
 @login_required
 def show_users_books():
-    if 'email' not in session:
-        return redirect(url_for('login'))
-    user = get_current_user()
-    if user is None:
-        return redirect(url_for('login'))
+    user = current_user
     return render_template('bookshelf.html',
                            unread_books=get_books_with_state(user.id, 'unread'),
                            read_books=get_books_with_state(user.id, 'read'))
@@ -121,12 +126,6 @@ def show_users_books():
 @login_required
 def explore():
     return render_template('explore.html')
-
-
-def get_current_user():
-    if 'email' not in session.keys():
-        return None
-    return User.query.filter(User.email == session['email']).first()
 
 
 def add_book_with_state(state, current_form):
@@ -151,7 +150,7 @@ def add_book_with_state(state, current_form):
 
     db.session.add(book)
 
-    user = get_current_user()
+    user = current_user
     ub = UserBooks(user_id=user.id,
                    book_id=book.id,
                    book_state=state,
