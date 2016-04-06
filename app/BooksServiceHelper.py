@@ -1,25 +1,25 @@
+from app.FieldNode import *
+
 searchQueryNames = {'author': 'inauthor', 'title': 'intitle'}
 
 
 class RequestHelper:
     def __init__(self):
-        self.__list_params = {}
-        self.__field_root = None
+        self.q = None
+        self.fields = FieldTree("items")
+        self.maxResults = 0
 
     def query(self, query):
-        self.__list_params['q'] = query
+        assert isinstance(query, str)
+        self.q = query
 
-    def __str__(self):
-        result = ''
-        for key, value in self.__list_params.items():
-            result += key
-            result += ': '
-            result += str(value)
-            result += ' '
-        return result
+    def max_results(self, max_results):
+        self.maxResults = max_results
 
-    def max_results(self, value):
-        self.__list_params['maxResults'] = value
+    def add_item(self, parent, field):
+        self.fields.add_child(parent, field)
 
-    def get(self, key):
-        return self.__list_params[key]
+    def add_items(self, parent, *args):
+        for arg in args:
+            assert isinstance(arg, str)
+            self.add_item(parent, arg)
