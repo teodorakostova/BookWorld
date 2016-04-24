@@ -1,16 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
-
   <div class="col-md-4">
-      <div class="panel panel-primary">
-          <div class="panel-heading">Already read</div>
+     <h3>Already read</h3>
+      <div class="panel panel-default">
             <table class="table">
               <tr>
                   <td>Title</td>
                   <td>Author</td>
                   <td>Rating</td>
               </tr>
-
                 {% for book in read_books %}
                 <tr>
 			        <td class="list-group-item">{{book.title}}</td>
@@ -18,13 +16,12 @@
                     <td class="list-group-item">{{book.rating}}</td>
                 </tr>
 		        {% endfor %}
-
             </table>
         </div>
   </div>
   <div class="col-md-4">
-  	<div class="panel panel-primary">
-          <div class="panel-heading">Wishlist</div>
+    <h3>Wishlist</h3>
+  	<div class="panel panel-default">
             <table class="table">
               <tr>
                   <td>Title</td>
@@ -36,7 +33,6 @@
                     <td class="list-group-item">{{book.author}}</td>
                 </tr>
 		        {% endfor %}
-
             </table>
         </div>
     </div>

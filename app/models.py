@@ -42,7 +42,6 @@ class User(db.Model, UserMixin):
 
 
 
-
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), unique=True)
@@ -51,8 +50,6 @@ class Book(db.Model):
     rating = db.Column(db.Float)
     __table_args__ = (UniqueConstraint('title', 'author'),)
 
-    def __init__(self):
-        rating = 1.0
 
     def __repr__(self):
         return "{}, by: {} Rating: {} ".format(self.title, self.author, self.rating)

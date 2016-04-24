@@ -11,7 +11,7 @@
         <form action="/add_unread" method="POST">
         	{{ forms.addBook(unread_book_form) }}
           <div class="form-group">
-            {{ unread_book_form.submit(class="btn btn-primary")}}
+            {{ unread_book_form.submit(class="btn btn-default")}}
           </div>
           {{ unread_book_form.csrf_token }}
         </form>
@@ -19,25 +19,19 @@
         <h4 class="h4 text-center">Already read</h4>
         <form action="/add_read" method="POST">
           {{ forms.addBook(read_book_form) }}
-            <div class="form-group">
-                {{ read_book_form.genre.label}}
-                {{ read_book_form.genre(class="form-control") }}
-            </div>
-          {{ read_book_form.rating.label}}
-          {{ read_book_form.rating }}
-
+          {{ read_book_form.rating(class="dropdown-menu") }}
           <div class="form-group">
             <h4 class="h4 text center">Add your review</h4>
             {{ read_book_form.review(class="form-control", rows="5") }}
           </div>
           <div class="form-group">
-            {{ read_book_form.submit(class="btn btn-primary")}}
+            {{ read_book_form.submit(class="btn btn-default")}}
           </div>
         </form>
       {%endif%}
     </div>
     <div class="col-md-8">
-      <div class="panel panel-primary">
+      <div class="panel panel-default">
           <div class="panel-heading">Top Books</div>
             <table class="table">
               <tr>
@@ -45,7 +39,6 @@
                   <td>Author</td>
                   <td>Rating</td>
               </tr>
-
                 {% for book in top_books %}
                 <tr>
 			        <td class="list-group-item">{{book.title}}</td>
@@ -53,7 +46,6 @@
                     <td class="list-group-item">{{book.rating}}</td>
                 </tr>
 		        {% endfor %}
-
             </table>
         </div>
       </div>

@@ -12,9 +12,7 @@
             {{form.password.label}}
             {{form.password(class="form-control", type="password", id="Password")}}            
           </div>
-
           {{form.submit(class="btn btn-primary", id="Submit")}}
-           
           <span class="pull-right">
             {{form.remember_me.label}}
             {{form.remember_me(type="checkbox")}}
@@ -32,12 +30,57 @@
         </div>                 
 {% endmacro %}
 
-{% macro display_books(books) %}
-  <div class="list-group text-center">
-    {% for b in books %}
-    <a href="#" class="list-group-item">
-      <h6 class="list-group-item-heading"> {{b.title}} by {{ b.author }}</h6>          
-    </a>      
+{% macro display_books(result_books) %}
+  {% for item in result_books['items'] %}
+        {% set img_src = 'http://terrencemcdonough.ie/pictures/nocover.jpg' %}
+        {% if 'imageLinks' in item['volumeInfo'].keys() %}
+            {% set img_src = item['volumeInfo']['imageLinks']['thumbnail'] %}
+        {% endif %}
+        <div class="media">
+            <div class="media-left">
+                <a href="#"><img class="media-object" src={{ img_src }} alt="..."></a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">{{ item['volumeInfo']['title'] }} by {{ item['volumeInfo']['authors'][0]
+                    }}</h4>
+                {% if 'categories' in item['volumeInfo'].keys() %}
+                <h5>Genre:
+                    {% for genre in item['volumeInfo']['categories'] %}
+                    {{ genre }}
+                    {% endfor %}
+                </h5>
+                {% endif %}
+
+                {% if 'publishedDate' in item['volumeInfo'].keys() %}
+                <h5>Publish Date: {{ item['volumeInfo']['publishedDate'] }}</h5>
+                {% endif %}
+
+                {% if 'publisher' in item['volumeInfo'].keys() %}
+                <h5>Publisher: {{ item['volumeInfo']['publisher'] }}</h5>
+                {% endif %}
+
+                {% if 'description' in item['volumeInfo'].keys() %}
+                <h5>{{ item['volumeInfo']['description'] }}</h5>
+                {% endif %}
+
+                <div class="btn-group" role="group" aria-label="...">
+                    <a href="/add_read?title=">
+                        <button type="button" class="btn btn-inverse">
+                            Currently reading
+                        </button>
+                    </a>
+                    <a href="/add_unread">
+                        <button type="button" class="btn btn-inverse">
+                            Want to read
+                        </button>
+                    </a>
+                    <a href="/add_read">
+                        <button type="button" class="btn btn-inverse">
+                            Already read
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
     {% endfor %}
-  </div>
 {% endmacro %}

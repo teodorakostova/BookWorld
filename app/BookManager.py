@@ -1,8 +1,6 @@
 from apiclient import discovery
 from apiclient.discovery import build
-from app import googleconf
-from app.googleconf import DEVELOPERS_KEY
-
+from googleconf import DEVELOPERS_CODE
 
 class BookManager:
     class ServiceBuilder:
@@ -15,8 +13,10 @@ class BookManager:
             return build(self.service_name, self.version, developerKey=self.developer_key)
 
     def __init__(self):
-        service_builder = self.ServiceBuilder('books', 'v1', DEVELOPERS_KEY)
+        service_builder = self.ServiceBuilder('books', 'v1', DEVELOPERS_CODE)
         self.service = service_builder.build_service()
 
     def search(self, requestHelper):
+        #print("Request helper: ", str(requestHelper.__dict__))
         return self.service.volumes().list(**requestHelper.__dict__).execute()
+        #return []

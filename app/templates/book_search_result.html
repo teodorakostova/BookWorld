@@ -1,20 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+{%import "forms.html" as forms%}
 {% extends "base.html" %}
 {% block content %}
 <form action="/explore" method="GET">
-    {% for book in result_books %}
-        <div class="media">
-          <div class="media-left">
-            <a href="#">
-              <img class="media-object" src="..." alt="...">
-            </a>
-          </div>
-          <div class="media-body">
-            <h4 class="media-heading">{{ book.title }} by {{ book.author }}</h4>
-            ...
-          </div>
-        </div>
-    {% endfor %}
-</form>>
+    {{ forms.display_books(result_books) }}
+</form>
+>
 {% endblock %}
