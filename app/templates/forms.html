@@ -64,17 +64,20 @@
                 {% endif %}
 
                 <div class="btn-group" role="group" aria-label="...">
-                    <a href="/add_read?title=">
+                    <a href="/add_read?title={{ item['volumeInfo']['title'] }}&author={{ item['volumeInfo']['authors'][0]
+                    }}">
                         <button type="button" class="btn btn-inverse">
                             Currently reading
                         </button>
                     </a>
-                    <a href="/add_unread">
+                    <a href="/add_unread?title={{ item['volumeInfo']['title'] }}&author={{ item['volumeInfo']['authors'][0]
+                    }}">
                         <button type="button" class="btn btn-inverse">
                             Want to read
                         </button>
                     </a>
-                    <a href="/add_read">
+                    <a href="/add_read?title={{ item['volumeInfo']['title'] }}&author={{ item['volumeInfo']['authors'][0]
+                    }}">
                         <button type="button" class="btn btn-inverse">
                             Already read
                         </button>

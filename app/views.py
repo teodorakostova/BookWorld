@@ -1,17 +1,13 @@
-from app import app, db
 from flask import render_template, redirect, request, session, url_for, flash, g
 from flask.ext.login import current_user
 from flask.ext.login import LoginManager
 from flask.ext.login import login_required, login_user, logout_user
 from builtins import print
-from .BookManager import BookManager
-from .BooksServiceHelper import RequestHelper
 from .forms import *
-from .models import User, UserBooks, Book
+from .ViewsUtils import *
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -36,13 +32,11 @@ def index():
         print("User is authenticated")
     else:
         print("User is not authenticated", current_user)
-    print(User.query.all())
-
-    loginform = LoginForm()
+    login_form = LoginForm()
     read_book_form = AddBookForm()
     unread_book_form = AddBookForm()
     top_books = Book.query.order_by(Book.rating.desc()).limit(5).all()
-    return render_template('index.html', loginform=loginform,
+    return render_template('index.html', loginform=login_form,
                            read_book_form=read_book_form,
                            unread_book_form=unread_book_form,
                            top_books=top_books)
@@ -109,7 +103,10 @@ def search():
 def add_read():
     if request.method == 'POST':
         read_book_form = AddBookForm()
-        add_book_with_state('read', read_book_form)
+        add_book_from_form('read', read_book_form)
+    else:
+        add_book_with_state_from_request('read', request)
+
     return redirect('/bookshelf')
 
 
@@ -118,7 +115,9 @@ def add_read():
 def add_unread():
     if request.method == 'POST':
         unread_book_form = AddBookForm()
-        add_book_with_state('unread', unread_book_form)
+        add_book_from_form('unread', unread_book_form)
+    else:
+        add_book_with_state_from_request('unread', request)
     return redirect('/bookshelf')
 
 
@@ -127,7 +126,6 @@ def login():
     form = LoginForm()
     if form.validate_on_submit:
         user = User.query.filter(User.email == form.email.data).first()
-        print("Prepare to validate")
         if user and user.verify_password(form.password.data):
             session['current_user_id'] = user.id
             session['remember_me'] = form.remember_me.data
@@ -173,51 +171,3 @@ def show_users_books():
 @login_required
 def explore():
     return render_template('explore.html')
-
-
-def add_book_with_state(state, current_form):
-    author = current_form.author.data
-    title = current_form.title.data
-
-    rating = current_form.rating.data
-    if rating == 'None':
-        rating = 0
-    else:
-        rating = float(rating)
-
-    review = current_form.review.data
-
-    already_added_books = Book.query.filter(Book.author == author, Book.title == title)
-    book = already_added_books.first()
-    # if the book is already in the Book table, just update its rating
-    if book is not None:
-        book.rating = (book.rating + rating) / (already_added_books.count() + 1)
-    else:
-        book = Book(author=author, title=title, rating=rating)
-
-    db.session.add(book)
-
-    user = current_user
-    ub = UserBooks(user_id=user.id,
-                   book_id=book.id,
-                   book_state=state,
-                   book_rating=rating,
-                   book_review=review)
-
-    db.session.add(ub)
-    db.session.commit()
-
-
-def get_books_with_state(uid, state):
-    user_books = UserBooks.query.filter(UserBooks.user_id == uid,
-                                        UserBooks.book_state == state).all()
-    return [book for book in [Book.query.filter(Book.id == user_book.book_id).first()
-                              for user_book in user_books]]
-
-
-def search_by_title(title):
-    return Book.query.filter(Book.title.contains(title)).all()
-
-
-def reccommend():
-    pass;
