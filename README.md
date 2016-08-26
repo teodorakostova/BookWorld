@@ -1,7 +1,11 @@
-Читателски дневник, поддържащ:
-<br>- Добавяне/премахване на прочетени книги
-<br>- Добавяне/премахване на книги в wishlist,
-<br>- при отбелязване като прочетена, книгата се прехвърля при прочетени
-<br>- Добавяне на любими цитати от книга
-<br>- Показване на прочетените книги по автор/жанр
+Social network for readers 
+<br>- Track reading progress
+<br>- Books wishlist
+<br>- Rate and write recommondations
+<br>- Browse through Google Books collection
+<br>- Charts of highest rated books by other users
+
+The project uses Python Flask framework and Books API Client Library for Python.
+
+
   
