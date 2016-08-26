@@ -5,6 +5,8 @@ from flask.ext.login import login_required, login_user, logout_user
 from builtins import print
 from .forms import *
 from .ViewsUtils import *
+from .BookManager import BookManager
+from .BooksServiceHelper import RequestHelper
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -35,7 +37,7 @@ def index():
     login_form = LoginForm()
     read_book_form = AddBookForm()
     unread_book_form = AddBookForm()
-    top_books = Book.query.order_by(Book.rating.desc()).limit(5).all()
+    top_books = Book.query.order_by(Book.rating.desc()).limit(10).all()
     return render_template('index.html', loginform=login_form,
                            read_book_form=read_book_form,
                            unread_book_form=unread_book_form,
@@ -44,57 +46,8 @@ def index():
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    # search_content = request.args.get('content', '')
-    # book_manager = BookManager()
-    # request_helper = RequestHelper()
-    # request_helper.add_item(None, "volumeInfo")
-    # request_helper.add_items("volumeInfo", "title", "authors", "categories", "imageLinks", "description")
-    # request_helper.max_results(10)
-    # request_helper.query(search_content)
-    # result = book_manager.search(request_helper)
-    result = {'items': [
-        {'volumeInfo': {'authors': ['Харпър Ли', 'Цветан Стоянов', 'Ани Бобева'], 'title': 'Да убиеш присмехулник'}},
-        {'volumeInfo': {'authors': ['Харпър Ли'], 'title': 'Да убиеш присмехулник'}}, {
-            'volumeInfo': {'categories': ['Drama'], 'authors': ['Harper Lee'], 'imageLinks': {
-                'thumbnail': 'http://books.google.com/books/content?id=0NEbHGREK7cC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-                'smallThumbnail': 'http://books.google.com/books/content?id=0NEbHGREK7cC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api'},
-                           'description': 'Required reading in most high schools, this Pulitzer Prize winning novel was originally published in 1969 and was voted the best book of the century by Library Journal.',
-                           'title': 'To Kill a Mockingbird'}}, {
-            'volumeInfo': {'categories': ['Fiction'], 'authors': ['Joyce Milton', 'Harper Lee'], 'imageLinks': {
-                'thumbnail': 'http://books.google.com/books/content?id=HgdIGqYrXj0C&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-                'smallThumbnail': 'http://books.google.com/books/content?id=HgdIGqYrXj0C&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api'},
-                           'description': 'A guide to reading "To Kill A Mockingbird" with a critical and appreciative mind. Includes background on the author\'s life and times, sample tests, term paper suggestions, and a reading list.',
-                           'title': "Harper Lee's To Kill a Mockingbird"}}, {
-            'volumeInfo': {'authors': ['Christopher Sergel'], 'imageLinks': {
-                'thumbnail': 'http://books.google.com/books/content?id=P6bzCgUuVroC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-                'smallThumbnail': 'http://books.google.com/books/content?id=P6bzCgUuVroC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api'},
-                           'categories': ['Performing Arts'], 'title': 'To Kill a Mockingbird'}}, {
-            'volumeInfo': {'categories': ['Fathers and daughters in literature'],
-                           'authors': ['Harold Bloom', 'Harper Lee'], 'imageLinks': {
-                    'thumbnail': 'http://books.google.com/books/content?id=LaMTiorjM9cC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-                    'smallThumbnail': 'http://books.google.com/books/content?id=LaMTiorjM9cC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api'},
-                           'description': "The Crucible still has permanence and relevance a half century after its initial publication. This powerful political drama set amidst the Salem witch trials is commonly understood as Arthur Miller's poignant response to McCarthyism. This new edition featuring new critical essays examines this important work.",
-                           'title': "Harper Lee's To Kill a Mockingbird"}}, {
-            'volumeInfo': {'categories': ['Literary Criticism'], 'authors': ['Michael J. Meyer'], 'imageLinks': {
-                'thumbnail': 'http://books.google.com/books/content?id=RyJtJZPX8jwC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-                'smallThumbnail': 'http://books.google.com/books/content?id=RyJtJZPX8jwC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api'},
-                           'description': "In 1960, To Kill a Mockingbird was published to critical acclaim. To commemorate To Kill a Mockingbird's 50th anniversary, Michael J. Meyer has assembled a collection of new essays that celebrate this enduring work of American literature. These essays approach the novel from educational, legal, social, and thematic perspectives. Harper Lee's only novel won the Pulitzer Prize and was transformed into a beloved film starring Gregory Peck as Atticus Finch. An American classic that frequently appears in middle school and high school curriculums, the novel has been subjected to criticism for its subject matter and language. Still relevant and meaningful, To Kill a Mockingbird has nonetheless been under-appreciated by many critics. There are few books that address Lee's novel's contribution to the American canon and still fewer that offer insights that can be used by teachers and by students. These essays suggest that author Harper Lee deserves more credit for skillfully shaping a masterpiece that not only addresses the problems of the 1930s but also helps its readers see the problems and prejudices the world faces today. Intended for high school and undergraduate usage, as well as for teachers planning to use To Kill a Mockingbird in their classrooms, this collection will be a valuable resource for all teachers of American literature.",
-                           'title': "Harper Lee's To Kill a Mockingbird"}}, {
-            'volumeInfo': {'categories': ['Alabama'], 'authors': ['Christopher Sergel', 'Harper Lee'], 'imageLinks': {
-                'thumbnail': 'http://books.google.com/books/content?id=c9pbL5epUN4C&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-                'smallThumbnail': 'http://books.google.com/books/content?id=c9pbL5epUN4C&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api'},
-                           'description': '"In his play, Christopher Sergel has shifted the focus slightly. The result of this shift, I believe, hightlights the novel\'s universal qualities. [He] reminds us...that the issues explored are not those of a \'regional\' work of art (as the novel is often categorised) but are of importance in Nottingham, Manchester, Birmingham or wherever the play is seen by an audience." - from Ray Speakman\'s introduction.',
-                           'title': 'The Play of To Kill a Mockingbird'}}, {
-            'volumeInfo': {'categories': ['Literary Criticism'], 'authors': ['Claudia Durst Johnson'], 'imageLinks': {
-                'thumbnail': 'http://books.google.com/books/content?id=aeqIV1m_akQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api',
-                'smallThumbnail': 'http://books.google.com/books/content?id=aeqIV1m_akQC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api'},
-                           'description': 'Collects documents and commentary illuminating Southern life in the 1950s',
-                           'title': 'Understanding To Kill a Mockingbird'}}, {
-            'volumeInfo': {'categories': ['Study Aids'], 'authors': ['Anita Price Davis'], 'imageLinks': {
-                'thumbnail': 'http://books.google.com/books/content?id=sziIMy_rAIgC&printsec=frontcover&img=1&zoom=1&source=gbs_api',
-                'smallThumbnail': 'http://books.google.com/books/content?id=sziIMy_rAIgC&printsec=frontcover&img=1&zoom=5&source=gbs_api'},
-                           'description': "REA's MAXnotes for Harper Lee's To Kill a Mockingbird MAXnotes offer a fresh look at masterpieces of literature, presented in a lively and interesting fashion. Written by literary experts who currently teach the subject, MAXnotes will enhance your understanding and enjoyment of the work. MAXnotes are designed to stimulate independent thought about the literary work by raising various issues and thought-provoking ideas and questions. MAXnotes cover the essentials of what one should know about each work, including an overall summary, character lists, an explanation and discussion of the plot, the work's historical context, illustrations to convey the mood of the work, and a biography of the author. Each chapter is individually summarized and analyzed, and has study questions and answers.",
-                           'title': 'To Kill a Mockingbird (MAXNotes Literature Guides)'}}]}
+    search_content = request.args.get('content', '')
+    result = search_by_content(search_content, 10)
     return render_template('book_search_result.html', result_books=result)
 
 
@@ -170,4 +123,7 @@ def show_users_books():
 @app.route('/explore')
 @login_required
 def explore():
-    return render_template('explore.html')
+    # TODO: Check if the user has read these books
+    # TODO: Filter results by genre
+    # TODO Implement a real recommendation algorithm...
+    return render_template('explore.html', result_books=recommend())

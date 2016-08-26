@@ -17,6 +17,4 @@ class BookManager:
         self.service = service_builder.build_service()
 
     def search(self, requestHelper):
-        #print("Request helper: ", str(requestHelper.__dict__))
         return self.service.volumes().list(**requestHelper.__dict__).execute()
-        #return []

@@ -11,9 +11,9 @@
               </tr>
                 {% for book in read_books %}
                 <tr>
-			        <td class="list-group-item">{{book.title}}</td>
-                    <td class="list-group-item">{{book.author}}</td>
-                    <td class="list-group-item">{{book.rating}}</td>
+			        <td>{{book.title}}</td>
+                    <td>{{book.author}}</td>
+                    <td>{{book.rating}}</td>
                 </tr>
 		        {% endfor %}
             </table>
@@ -29,8 +29,8 @@
               </tr>
                 {% for book in unread_books %}
                 <tr>
-			        <td class="list-group-item">{{book.title}}</td>
-                    <td class="list-group-item">{{book.author}}</td>
+			        <td>{{book.title}}</td>
+                    <td>{{book.author}}</td>
                 </tr>
 		        {% endfor %}
             </table>

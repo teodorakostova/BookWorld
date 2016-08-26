@@ -1,12 +1,12 @@
 class FieldTree:
     class Node:
-        def __init__(self, name, children=None, next=None):
+        def __init__(self, name, children=None, nextNode=None):
             self.name = name
             if children is None:
                 self.children = []
             else:
                 self.children = children
-            self.next = next
+            self.nextNode = nextNode
 
         def __str__(self):
             return str(self.name)

@@ -1,56 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+{%import "forms.html" as forms%}
 {% extends "base.html" %}
-{% import "forms.html" as forms %}
-
 {% block content %}
-<head>
-    <style>
-        ul.images {
-        margin: 0;
-        padding: 0;
-        white-space: nowrap;
-        width: 900px;
-        overflow-x: auto;
-        background-color: #ddd;
-        }
-        ul.images li {
-        display: inline;
-        width: 150px;
-        height: 150px;
-        }
-    </style>
-</head>>
-<form action="/explore" method="GET">
-    <div class="col-md-8">
-        <h3>Recommended for you</h3>
-        <table class="table">
-            <tr>
-                <td>
-                    <div class="media">
-                        <div class="media-body">
-                            <a href="#"><img class="media-object" src="https://books.google.bg/books/content?id=KOPSjMuVN4kC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE71a84bEY0xjU8zJV6YM_xgW8ylOm6qK37Y2BUyMFf0h2r0aha7NsD-waQoKLkxPQX-PFFFPsfCSaSAulf4OnuGVTYfN4gmTXI6SCp310AElZYollSgz-DLcRe7wKm2240ehioCW" alt="..."></a>
-                            <h4>Title of a book</h4>
-                        </div>
-                    </div>
-                </td>
-                 <td>
-                    <div class="media">
-
-                        <div class="media-body">
-                            <a href="#"><img class="media-object" src="https://books.google.bg/books/content?id=KOPSjMuVN4kC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE71a84bEY0xjU8zJV6YM_xgW8ylOm6qK37Y2BUyMFf0h2r0aha7NsD-waQoKLkxPQX-PFFFPsfCSaSAulf4OnuGVTYfN4gmTXI6SCp310AElZYollSgz-DLcRe7wKm2240ehioCW" alt="..."></a>
-                            <h4>Title of a book</h4>
-                        </div>
-                    </div>
-                </td>
-                 <td>
-                    <div class="media">
-                        <div class="media-body">
-                            <a href="#"><img class="media-object" src="https://books.google.bg/books/content?id=KOPSjMuVN4kC&printsec=frontcover&img=1&zoom=1&edge=curl&imgtk=AFLRE71a84bEY0xjU8zJV6YM_xgW8ylOm6qK37Y2BUyMFf0h2r0aha7NsD-waQoKLkxPQX-PFFFPsfCSaSAulf4OnuGVTYfN4gmTXI6SCp310AElZYollSgz-DLcRe7wKm2240ehioCW" alt="..."></a>
-                            <h4>Title of a book</h4>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div> <!-- /.row -->
-</form>
+    {% for book in result_books %}
+    {{ forms.display_books(book) }}
+    {% endfor %}
 {% endblock %}

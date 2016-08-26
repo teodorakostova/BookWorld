@@ -40,7 +40,6 @@ class TestCase(unittest.TestCase, ):
         self.rh.add_items("volumeInfo", "authors", "description", "categories")
         self.rh.max_results(2)
         result = self.bm.search(self.rh)
-        print("COMPLEX QUERY RESULT")
         print(result)
         assert len(result) > 0
 

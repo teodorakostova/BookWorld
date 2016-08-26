@@ -19,7 +19,7 @@
         <h4 class="h4 text-center">Already read</h4>
         <form action="/add_read" method="POST">
           {{ forms.addBook(read_book_form) }}
-          {{ read_book_form.rating(class="dropdown-menu") }}
+          {{ read_book_form.rating(class="dropdown") }}
           <div class="form-group">
             <h4 class="h4 text center">Add your review</h4>
             {{ read_book_form.review(class="form-control", rows="5") }}
@@ -41,9 +41,9 @@
               </tr>
                 {% for book in top_books %}
                 <tr>
-			        <td class="list-group-item">{{book.title}}</td>
-                    <td class="list-group-item">{{book.author}}</td>
-                    <td class="list-group-item">{{book.rating}}</td>
+			        <td>{{book.title}}</td>
+                    <td>{{book.author}}</td>
+                    <td>{{book.rating}}</td>
                 </tr>
 		        {% endfor %}
             </table>

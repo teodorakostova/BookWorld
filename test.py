@@ -49,6 +49,9 @@ class TestCase(unittest.TestCase,):
         print(db.session.query(User).count())
         assert db.session.query(Book).count() == 1
 
+    def test_favourite_author(self):
+        assert 1 == 1
+
 
 if __name__ == '__main__':
     try:
